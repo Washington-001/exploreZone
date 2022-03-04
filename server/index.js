@@ -9,21 +9,18 @@ import userRouter from "./routes/user.js";
 
 const app = express();
 
-app.use(express.json({ limit: '30mb', extended: true }))
-app.use(express.urlencoded({ limit: '30mb', extended: true }))
+app.use(express.json({ limit: '90mb', extended: true }))
+app.use(express.urlencoded({ limit: '90mb', extended: true }))
 app.use(cors());
 
 app.use('/posts', postRoutes);
 app.use("/user", userRouter);
-if(process.env.NODE_ENV==='production')
-{
-    app.use(express.static(path.join(__dirname,"testapp","build")));
-    app.get("*",(req,resp)=>{
-        resp.sendFile(path.join(__dirname,"testapp","build","index.html"));
-    })
-}
 
-const CONNECTION_URL = 'mongodb+srv://Washington:mirema236@cluster0.yg7y5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+app.use(express.static(path.join(__dirname, "/client")));
+
+app.get("*",(req,resp)=>{
+  resp.sendFile(path.join(__dirname, "/client/build", "index.html"));
+});
 const PORT = process.env.PORT|| 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
